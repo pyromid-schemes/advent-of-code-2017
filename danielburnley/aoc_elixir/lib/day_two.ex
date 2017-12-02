@@ -22,4 +22,29 @@ defmodule AocElixir.DayTwo do
 
   end
 
+  defmodule PartTwo do
+
+    def solve(input) do
+      AocElixir.DayTwo.parse_input(input)
+      |> calculate_checksum
+    end
+
+
+    defp calculate_divisors(_, []), do: :none
+    defp calculate_divisors(num, [divisor|_rest]) when rem(num, divisor) == 0, do: num/divisor
+    defp calculate_divisors(divisor, [num|_rest]) when rem(num, divisor) == 0, do: num/divisor
+    defp calculate_divisors(num, [_|rest]), do: calculate_divisors(num, rest)
+
+    defp get_checksum_for_line([first|rest]) do
+      case calculate_divisors(first, rest) do
+        :none -> get_checksum_for_line(rest)
+        result -> result
+      end
+    end
+
+    defp calculate_checksum([line]), do: get_checksum_for_line(line)
+    defp calculate_checksum([line|rest]), do: get_checksum_for_line(line) + calculate_checksum(rest)
+
+  end
+
 end
