@@ -5,19 +5,12 @@ const compute = (input, word_func) => {
     const words = i.split(' ')
     const wordCount = new Set()
 
-    let valid = true
-    words.some(w => {
+    return acc + (words.some(w => {
       const word = word_func(w)
-
-      if(wordCount.has(word)) {
-        valid = false
-        return true
-      }
-      wordCount.add(word)
-      return false
-    })
-
-    return acc + (valid ? 1 : 0)
+      const hasWord = wordCount.has(word)
+      wordCount.add(word) 
+      return hasWord
+    }) ? 0 : 1)
   }, 0)
 }
 
