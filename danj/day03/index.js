@@ -7,52 +7,41 @@ const roundDownToNearestOddNumber = n => {
 }
 
 const day03_a = input => {
-  // find the squares between the number 
-  // 9 < 12 < 25
-  // side length = 4
-  // left = 3
-  // left - side length = 1
-  // console.log('sqrt', Math.sqrt(input))
+  // NOTE: Doesn't work for actual square numbers, too lazy to fix, deal with it
 
-  // 10 -> 1 [ 1 - 2 = - 1 ] 1 < 2 so flip [ = 1 ]
-  // 11 -> 0 [ 2 - 2 = 0 ]
-  // 12 -> 1 [ 3 - 2 = 1 ] 
-  // 13 -> 2 [ 4 - 2 = 2 ]
-  // 14 -> 1
-  // 15 -> 0
-
+  // n = the square root of the nearest square number below it
+  // m = the square root of the nearest square number above it
   const n = roundDownToNearestOddNumber(Math.sqrt(input))
-  const n_2 = n * n
-  console.log('n', n, 'n^2', n_2)
+  const n2 = n * n
+  // amount of steps to reach the nth corner [not the mth]
+  const steps_for_n = (n + 1) / 2
 
-  const next_n = n + 2
-  const next_n_2 = next_n * next_n
+  // n2 = n ^ 2
+  // m2 = m ^ 2
+  const m = n + 2
+  const m2 = m * m
 
-  const diff = next_n_2 - n_2
-  const diff_divided_by_4 = diff / 4
-  // console.log('diff', diff)
-  console.log('diff / 4 [SIDE_LENGTH]', diff_divided_by_4)
+  // diff = difference between 2 squares
+  const diff = m2 - n2
+  // diff_by_4 = amount of numbers on each side [r,u,l,d]
+  const diff_by_4 = diff / 4
 
-  const half_side_length = diff_divided_by_4 / 2
-  console.log('half_side_length', half_side_length)
+  // half_side_length = half the length of a side
+  const half_side_length = diff_by_4 / 2
 
-  const input_minus_n_2 = input - n_2
-  console.log('input minus n^2', input_minus_n_2)
-  const mod = input_minus_n_2 % diff_divided_by_4
-  console.log('mod', mod)
-  // console.log()
+  // input minus n^2 = some value between the corner and the number
+  const input_minus_n2 = input - n2 
+  // get the difference from 'A' corner to offset of the input (not the nth corner)
+  const mod = input_minus_n2 % diff_by_4
 
-  let f = ((input_minus_n_2 - half_side_length) % diff_divided_by_4)
+  // get the difference between the offset from a corner and the middle of the row
+  let f = ((mod - half_side_length) % diff_by_4)
 
+  // if the mod is less than half of the side length the result should be negated as values go from [-1 -> -half_side_length -> -1]
   if ( mod < half_side_length ) f *= -1
 
-  
-  console.log('F=',f)
-
-  const steps_for_n = (n + 1) / 2
-  console.log('STEPS FOR N', n, steps_for_n)
-
-  return (steps_for_n) + f
+  // steps to the corner + difference between the center
+  return steps_for_n + f
 }
 
 const calculateValueAtPosition = (values, currentPosition) => {
@@ -67,60 +56,57 @@ const calculateValueAtPosition = (values, currentPosition) => {
       value += values[key]
     }
   })
-  console.log('value', value)
   return value
 }
 
-const findNumberGreaterThanInSequence = (number, sequence) => {
-  let values = { '0.0': 1 }
+const day03_b = input => {
+  // Consts and setups
   let currentPosition = { x: 0, y: 0 }
+  let values = { '0.0': 1 }
+  const positions = ['r', 'u', 'l', 'd']
   const dirs = {
     'r': { x: 1, y: 0 },
     'u': { x: 0, y: 1 },
     'l': { x: -1, y: 0 },
     'd': { x: 0, y: -1 }
   }
-
-  let FINAL
-  sequence.some(s => {
-    currentPosition.x += dirs[s].x
-    currentPosition.y += dirs[s].y
-
-    const value = calculateValueAtPosition(values, currentPosition)
-
-    values[`${currentPosition.x}.${currentPosition.y}`] = value
-
-    if (!FINAL && value > number) {
-      FINAL = value
-      return true
-    }
-
-    console.log(`currentPosition [${JSON.stringify(currentPosition)}]`)
-    return false
-  })
-
-  return FINAL
-}
-
-const day03_b = input => {
-  let currentPosition = { x: 0, y: 0 }
-  let positions = ['r', 'u', 'l', 'd']
   
+  // a sequence of letters to follow a route
   let sequence = []
   for(var i=0; i<16; i++){
     const m = i % 4;
     const times = Math.floor(i / 4) * 2 + (m >= 2 ? 2 : 1) // get the amount of times the letter is repeated
-
-    console.log(`[${positions[m]}] times [${times}]`)
 
     for(var j=0; j<times; j++){
       sequence.push(positions[m])
     }
   }
 
-  const numberGreaterThanInSequence = findNumberGreaterThanInSequence(input, sequence)
+  let FINAL
+  sequence.some(s => {
+    // Update new position of 
+    currentPosition.x += dirs[s].x
+    currentPosition.y += dirs[s].y
+
+    // calculate value at currentPosition
+    const value = calculateValueAtPosition(values, currentPosition)
+
+    // update value in the storage
+    values[`${currentPosition.x}.${currentPosition.y}`] = value
+
+    // if value is greater than input, we found our number
+    if (value > input) {
+      FINAL = value
+      return true
+    }
+
+    return false
+  })
+
+  return FINAL
+
   
-  return numberGreaterThanInSequence
+  return FINAL
 }
 
 export default {
