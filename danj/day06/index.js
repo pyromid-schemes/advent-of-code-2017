@@ -1,19 +1,29 @@
 const helpers = require('../helpers').default
 
-/*
-s -> 0 2 7 0
-1 -> 2 4 1 2
-2 -> 3 1 2 3
-3 -> 0 2 3 4
-4 -> 1 3 4 1
-5 -> 2 4 1 2 [same as 1] -- 5 is the number of times before it finds a loop
-*/
+const updateBanks = banks => {
+  // Get index of bank stack with highest vlaue
+  let indexOfHighestValuedBlock = findIndexOfHighestBlock(banks)
+  let value = banks[indexOfHighestValuedBlock]
+
+  // Reset this stack to 0
+  banks[indexOfHighestValuedBlock++] = 0
+
+  // Update all other stacks with the value from this stack
+  while(value-- > 0) {
+    indexOfHighestValuedBlock %= banks.length
+    banks[indexOfHighestValuedBlock]++
+    indexOfHighestValuedBlock++
+  }
+
+  // Return new bank stack
+  return banks
+}
+
 const findIndexOfHighestBlock = banks => {
   let highestValue = -1
   let highestValueIndex = 0
 
   banks.map((b,idx) => {
-    // console.log(`b[${idx}] [${b}]`)
     if (b > highestValue) {
       highestValue = b
       highestValueIndex = idx
@@ -23,51 +33,42 @@ const findIndexOfHighestBlock = banks => {
   return highestValueIndex
 }
 
-const partA = input => {
+const runBankSimulation = input => {
   let banks = input.split(' ').map(i => Number(i))
-  console.log('banks', banks)
+  
+  let existingPatterns = {}
+  existingPatterns[banks.join('.')] = 0
 
-  let existingPatterns = new Set()
-  existingPatterns.add(banks.join('.'))
-
+  let diff = 0
   let steps = 0
   while(true){
     steps++
 
-    let indexOfHighestValuedBlock = findIndexOfHighestBlock(banks)
-    let value = banks[indexOfHighestValuedBlock]
-    // console.log('index', indexOfHighestValuedBlock)
-    // console.log('value', value)
+    banks = updateBanks(banks)
 
-    banks[indexOfHighestValuedBlock++] = 0
-
-    while(value-- > 0) {
-      indexOfHighestValuedBlock %= banks.length
-
-      banks[indexOfHighestValuedBlock]++
-
-      // console.log('iohvb', indexOfHighestValuedBlock)
-
-      indexOfHighestValuedBlock++
-    }
-
+    // Create pattern from bank set
     const pattern = banks.join('.')
-
-    if(existingPatterns.has(pattern)){
+    // Check if pattern exists already - if it does, return some values
+    if(existingPatterns[pattern]){
+      diff = steps - existingPatterns[pattern]
       break;
     }
-    existingPatterns.add(pattern)
-
-    // console.log('banksnew', banks)
-
-    // find index of highest valued block -- 2 [7]
-
-    if (steps === 100000) break;
+    // Add the pattern with the amount of steps to reach here
+    existingPatterns[pattern] = steps
   }
 
+  return { diff, steps }
+}
+
+const partA = input => {
+  const { diff, steps } = runBankSimulation(input)
   return steps
 }
-const partB = input => 2
+
+const partB = input => {
+  const { diff, steps } = runBankSimulation(input)
+  return diff
+}
 
 export default {
   a: partA,
