@@ -17,4 +17,17 @@ describe('day 7', () => {
       })
     })
   })
+
+  describe('part B', () => {
+    const tests = [
+      { input: helpers.readFile2(__dirname + '/day07_input.txt'), expectedResult: 60 }
+    ]
+
+    tests.map(t => {
+      it(`test input should return '${t.expectedResult}'`, () => {
+        const actualResult = day.b(t.input)
+        expect(actualResult).to.equal(t.expectedResult)    
+      })
+    })
+  })
 })
