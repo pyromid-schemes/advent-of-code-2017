@@ -1,5 +1,3 @@
-import { print } from 'util';
-
 const helpers = require('../helpers').default
 
 const treesUpdateWeights = trees => {

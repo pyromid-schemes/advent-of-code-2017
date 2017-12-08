@@ -7,9 +7,15 @@ const splitByNewLine = input => input.split("\n")
 
 const sortNumbers = arr => arr.sort((a,b) => a - b)
 
+const padDay = dayNumber => {
+  const dayPadded =  `${dayNumber < 10 ? '0' : ''}${dayNumber}`
+  return { dayNumber, dayPadded }
+}
+
 export default {
   readFile,
   readFile2,
   splitByNewLine,
-  sortNumbers
+  sortNumbers,
+  padDay
 }
