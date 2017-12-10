@@ -27,7 +27,7 @@ describe(`day ${dayNumber}`, () => {
 
     tests.map(t => {
       it(`test input should return '${t.expectedResult}'`, () => {
-        const actualResult = day.b(t.input, 5)
+        const actualResult = day.b(t.input)
         expect(actualResult).to.equal(t.expectedResult)    
       })
     })
