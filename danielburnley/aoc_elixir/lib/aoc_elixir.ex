@@ -12,6 +12,9 @@ defmodule AocElixir do
     input = get_input(2017, 5)
     IO.puts "Day 5.1 - #{AocElixir.DayFive.PartOne.solve(input)}"
     IO.puts "Day 5.2 - #{AocElixir.DayFive.PartTwo.solve(input)}"
+    input = get_input(2017, 6)
+    IO.puts "Day 6.1 - #{AocElixir.DaySix.PartOne.solve(input)}"
+    IO.puts "Day 6.2 - #{AocElixir.DaySix.PartTwo.solve(input)}"
   end
 
   defp get_input(year, day) do
