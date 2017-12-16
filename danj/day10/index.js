@@ -28,7 +28,9 @@ const runInputsWithRounds = (inputs, length, rounds) => {
   return list
 }
 
-const computeKnotHash = list => {
+const computeKnotHash = input => {
+  const inputs = input.split('').map(i => Number(i.charCodeAt())).concat([17, 31, 73, 47, 23])
+  const list = runInputsWithRounds(inputs, 256, 64)
   let knotHash = ''
   for(var i=0; i<16; i++){
     const block = list.slice(i*16, (i+1)*16)
@@ -46,13 +48,12 @@ const partA = (input, length = 256) => {
   return list[0] * list[1]
 }
 
-const partB = (input, length = 256) => {
-  const inputs = input.split('').map(i => Number(i.charCodeAt())).concat([17, 31, 73, 47, 23])
-  const list = runInputsWithRounds(inputs, length, 64)
-  return computeKnotHash(list)
+const partB = (input) => {
+  return computeKnotHash(input)
 }
 
 export default {
   a: partA,
-  b: partB
+  b: partB,
+  computeKnotHash
 }
