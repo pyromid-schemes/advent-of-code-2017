@@ -20,6 +20,11 @@ defmodule AocElixir do
     IO.puts "Day 7.2 - #{AocElixir.DaySeven.PartTwo.solve(input)}"
   end
 
+  def run_current do
+    input = get_input(2017, 8)
+    IO.puts "Day 8.1 - #{AocElixir.DayEight.PartOne.solve(input)}"
+  end
+
   defp get_input(year, day) do
     {:ok, input} = AdventOfCodeHelper.get_input(year, day)
     String.trim(to_string input)
