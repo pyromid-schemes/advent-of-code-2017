@@ -3,6 +3,17 @@ defmodule DayEightSpec do
 
   def parse_instructions(input), do: AocElixir.DayEight.parse_instructions(input)
 
+  def run(input) do
+    Enum.join(input, "\n")
+    |> AocElixir.DayEight.PartOne.solve
+  end
+
+  def run_two(input) do
+    Enum.join(input, "\n")
+    |> AocElixir.DayEight.PartTwo.solve
+  end
+
+
   context "parsing" do
     it "increment" do
       expect(parse_instructions(["a inc 1 if a > 1"])).to eq([{{:inc, "a", 1}, {:gt, "a", 1}}])
@@ -46,11 +57,6 @@ defmodule DayEightSpec do
   end
 
   context "part one" do
-    def run(input) do
-      Enum.join(input, "\n")
-      |> AocElixir.DayEight.PartOne.solve
-    end
-
     it "acceptance" do
       input = [
         "b inc 5 if a > 1",
@@ -78,5 +84,18 @@ defmodule DayEightSpec do
       ]
       expect(run(input)).to eq(20)
     end
+  end
+
+  context "part two" do
+    it "acceptance" do
+      input = [
+        "b inc 5 if a > 1",
+        "a inc 1 if b < 5",
+        "c dec -10 if a >= 1",
+        "c inc -20 if c == 10"
+      ]
+      expect(run_two(input)).to eq(10)
+    end
+
   end
 end

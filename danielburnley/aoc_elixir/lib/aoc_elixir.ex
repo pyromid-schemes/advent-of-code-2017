@@ -18,11 +18,13 @@ defmodule AocElixir do
     input = get_input(2017, 7)
     IO.puts "Day 7.1 - #{AocElixir.DaySeven.PartOne.solve(input)}"
     IO.puts "Day 7.2 - #{AocElixir.DaySeven.PartTwo.solve(input)}"
+    input = get_input(2017, 8)
+    IO.puts "Day 8.1 - #{AocElixir.DayEight.PartOne.solve(input)}"
+    IO.puts "Day 8.2 - #{AocElixir.DayEight.PartTwo.solve(input)}"
   end
 
   def run_current do
-    input = get_input(2017, 8)
-    IO.puts "Day 8.1 - #{AocElixir.DayEight.PartOne.solve(input)}"
+    IO.puts "Put something here"
   end
 
   defp get_input(year, day) do

@@ -70,4 +70,26 @@ defmodule AocElixir.DayEight do
       execute(rest, AocElixir.DayEight.execute_instruction(instruction, registers))
     end
   end
+
+  defmodule PartTwo do
+    def solve(input) do
+      String.split(input, "\n")
+      |> AocElixir.DayEight.parse_instructions
+      |> execute
+    end
+
+    defp update_max(registers, max) do
+      case AocElixir.DayEight.get_max_register_value(registers) > max do
+        true -> AocElixir.DayEight.get_max_register_value(registers)
+        false -> max
+      end
+    end
+
+    defp execute(instructions), do: execute(instructions, AocElixir.DayEight.init_registers(instructions), 0)
+    defp execute([], _, max), do: max
+    defp execute([instruction|rest], registers, max) do
+      registers = AocElixir.DayEight.execute_instruction(instruction, registers)
+      execute(rest, registers, update_max(registers, max))
+    end
+  end
 end
