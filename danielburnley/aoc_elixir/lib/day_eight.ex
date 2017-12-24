@@ -1,4 +1,37 @@
 defmodule AocElixir.DayEight do
+  defp condition_met?({:eq, register, amount}, registers),  do: registers[register] == amount
+  defp condition_met?({:neq, register, amount}, registers), do: registers[register] != amount
+  defp condition_met?({:lt, register, amount}, registers),  do: registers[register] <  amount
+  defp condition_met?({:lte, register, amount}, registers), do: registers[register] <= amount
+  defp condition_met?({:gt, register, amount}, registers),  do: registers[register] >  amount
+  defp condition_met?({:gte, register, amount}, registers), do: registers[register] >= amount
+
+  def execute_instruction({increment, condition}, registers) do
+    case condition_met?(condition, registers) do
+      true ->
+        increment_register(increment, registers)
+      false ->
+        registers
+    end
+  end
+
+  defp increment_register({:inc, register, amount}, registers) do
+    %{registers|register => registers[register] + amount}
+  end
+  defp increment_register({:dec, register, amount}, registers) do
+    %{registers|register => registers[register] - amount}
+  end
+
+  def init_registers(instructions, registers \\ %{})
+  def init_registers([], registers), do: registers
+  def init_registers([{{_, first, _},{_, second, _}}|rest], registers) do
+    registers = Map.put(registers, first, 0)
+    |> Map.put(second, 0)
+    init_registers(rest, registers)
+  end
+
+  def get_max_register_value(registers), do: Map.values(registers) |> Enum.max
+
   def parse_instructions([]), do: []
   def parse_instructions([instruction|rest]) do
     [increment, condition] = String.split(instruction, " if ")
@@ -30,38 +63,11 @@ defmodule AocElixir.DayEight do
       |> execute
     end
 
-    defp condition_met?({:eq, register, amount}, registers),  do: registers[register] == amount
-    defp condition_met?({:neq, register, amount}, registers), do: registers[register] != amount
-    defp condition_met?({:lt, register, amount}, registers),  do: registers[register] <  amount
-    defp condition_met?({:lte, register, amount}, registers), do: registers[register] <= amount
-    defp condition_met?({:gt, register, amount}, registers),  do: registers[register] >  amount
-    defp condition_met?({:gte, register, amount}, registers), do: registers[register] >= amount
 
-    defp increment_register({:inc, register, amount}, registers) do
-      %{registers|register => registers[register] + amount}
-    end
-    defp increment_register({:dec, register, amount}, registers) do
-      %{registers|register => registers[register] - amount}
-    end
-
-    defp init_registers(instructions, registers \\ %{})
-    defp init_registers([], registers), do: registers
-    defp init_registers([{{_, first, _},{_, second, _}}|rest], registers) do
-      registers = Map.put(registers, first, 0)
-      |> Map.put(second, 0)
-      init_registers(rest, registers)
-    end
-
-    defp execute(instructions), do: execute(instructions, init_registers(instructions))
-    defp execute([], registers), do: Map.values(registers) |> Enum.max
-    defp execute([{increment, condition}|rest], registers) do
-      case condition_met?(condition, registers) do
-        true ->
-          registers = increment_register(increment, registers)
-          execute(rest, registers)
-        false ->
-          execute(rest, registers)
-      end
+    defp execute(instructions), do: execute(instructions, AocElixir.DayEight.init_registers(instructions))
+    defp execute([], registers), do: AocElixir.DayEight.get_max_register_value(registers)
+    defp execute([instruction|rest], registers) do
+      execute(rest, AocElixir.DayEight.execute_instruction(instruction, registers))
     end
   end
 end
