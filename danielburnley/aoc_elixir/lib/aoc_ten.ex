@@ -33,12 +33,22 @@ defmodule AocElixir.DayTen do
   end
 
   defmodule PartTwo do
+    use Bitwise
+
     def solve(input) do
       String.to_charlist(input)
+      |> Enum.concat([17,31,73,47,23])
       |> execute
     end
 
-    def execute(_) do
+    def dense_hash(input) do
+      Enum.chunk_every(input, 16)
+      |> Enum.map(fn list ->
+        Enum.reduce(list, fn x, acc -> x ^^^ acc end)
+      end)
+    end
+
+    defp execute(_) do
     end
   end
 end

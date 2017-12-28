@@ -10,6 +10,10 @@ defmodule DayTenSpec do
     expect(AocElixir.DayTen.PartOne.solve(input)).to eq(expected)
   end
 
+  def expect_dense_hash(input, expected) do
+    expect(AocElixir.DayTen.PartTwo.dense_hash(input)).to eq(expected)
+  end
+
   def expect_round({input, marks}, expected) do
     expect(AocElixir.DayTen.execute_round(input, marks)).to eq(expected)
   end
@@ -69,6 +73,21 @@ defmodule DayTenSpec do
     it do: expect_round({[2], [1,2,3,4,5]}, {[2,1,3,4,5], 2, 1})
     it do: expect_round({[1,2], [1,2,3,4,5]}, {[1,3,2,4,5], 4, 2})
     it do: expect_round({[1,2,3], [1,2,3,4,5]}, {[1,5,2,4,3], 4, 3})
+  end
+
+  context "calculate dense hash" do
+    it "with only two items", do: expect_dense_hash([10, 20], [30])
+    it "with sixteen items" do
+      input = [65,27,9,1,4,3,40,50,91,7,6,0,2,5,68,22]
+      expect_dense_hash(input, [64])
+    end
+    it "with thirty two items" do
+      input = [
+        65,27,9,1,4,3,40,50,91,7,6,0,2,5,68,22,
+        65,27,9,1,4,3,40,50,91,7,6,0,2,5,68,22
+      ]
+      expect_dense_hash(input, [64,64])
+    end
   end
 
   context "solve part one" do
