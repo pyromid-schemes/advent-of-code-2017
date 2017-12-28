@@ -48,7 +48,24 @@ defmodule AocElixir.DayTen do
       end)
     end
 
-    defp execute(_) do
+    def hash_string(input) do
+      Enum.map(input, fn num ->
+        Integer.to_string(num, 16)
+        |> String.pad_leading(2, "0")
+      end)
+      |> Enum.join("")
+      |> String.downcase
+    end
+
+    defp execute(input, remaining_rounds \\ 64, marks \\ AocElixir.DayTen.initial_marks, pos \\ 0, skip \\ 0)
+    defp execute(input, 1, marks, pos, skip) do
+      {result,_,_} = AocElixir.DayTen.execute_round(input, marks, pos, skip)
+      dense_hash(result)
+      |> hash_string
+    end
+    defp execute(input, remaining_rounds, marks, pos, skip) do
+      {marks, pos, skip} = AocElixir.DayTen.execute_round(input, marks, pos, skip)
+      execute(input, remaining_rounds - 1, marks, pos, skip)
     end
   end
 end
