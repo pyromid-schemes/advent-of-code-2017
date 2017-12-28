@@ -1,4 +1,6 @@
 defmodule AocElixir.DayTen do
+  def initial_marks, do: (for n <- 0..255, do: n)
+
   def twist_knot(marks, position, amount) when position + amount > length(marks) do
     {middle, last} = Enum.split(marks, position)
     {first, middle} = Enum.split(middle, rem(position + amount, length(marks)))
@@ -16,9 +18,7 @@ defmodule AocElixir.DayTen do
       |> execute
     end
 
-    def initial_marks, do: (for n <- 0..255, do: n)
-
-    defp execute(inputs, marks \\ initial_marks(), position \\ 0, skip \\ 0)
+    defp execute(inputs, marks \\ AocElixir.DayTen.initial_marks(), position \\ 0, skip \\ 0)
     defp execute([], marks, _, _) do
       [first, second|_] = marks
       first * second
