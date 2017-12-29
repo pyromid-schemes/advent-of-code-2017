@@ -31,6 +31,8 @@ defmodule AocElixir do
 
   def run_current do
     IO.puts "Put something here"
+    input = get_input(2017, 11)
+    IO.puts "Day 11.1 - #{AocElixir.DayEleven.PartOne.solve(input)}"
   end
 
   defp get_input(year, day) do
